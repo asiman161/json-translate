@@ -63,3 +63,6 @@ Thumbs.db
 
 # other
 .env
+/venv
+/translates
+/*.xlsx

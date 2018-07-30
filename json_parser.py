@@ -1,3 +1,11 @@
+# Проверяю, что я получил строку или чиисло
+def only_str_or_int(data):
+    for item in data:
+        if not isinstance(item, str) and not isinstance(item, int):
+            return False
+    return True
+
+
 def parse(data, keys, index, keys_by_translate):
     for i, key in enumerate(data):
         key = key
@@ -10,13 +18,17 @@ def parse(data, keys, index, keys_by_translate):
             parse(data[key], k, index + 1, keys_by_translate)
         elif isinstance(data[key], list):
             k.append(key)
-            for index_inner, data_key in enumerate(data[key]):
-                last_key = k[len(k) - 1]
-                if isinstance(last_key, int) and last_key + 1 == index_inner:
-                    k[len(k) - 1] = index_inner
-                else:
-                    k.append(index_inner)
-                parse(data[key][index_inner], k, index + 2, keys_by_translate)
+            if only_str_or_int(data[key]):
+                joined_translates = ";".join([str(d) for d in data[key]])
+                keys_by_translate[joined_translates] = [k]
+            else:
+                for index_inner, data_key in enumerate(data[key]):
+                    last_key = k[len(k) - 1]
+                    if isinstance(last_key, int) and last_key + 1 == index_inner:
+                        k[len(k) - 1] = index_inner
+                    else:
+                        k.append(index_inner)
+                    parse(data[key][index_inner], k, index + 2, keys_by_translate)
         elif not isinstance(data[key], bool):
             if len(k) == index:
                 k.append(key)
@@ -47,7 +59,6 @@ def write_exists(exists, dict_exists, write_exist=False):
 
     # print translates that exists
     if write_exist:
-        index += 1
         for text in exists[True]:
             sheet_local['C' + str(index)] = text
             sheet_local['D' + str(index)] = dict_exists[text.lower()]

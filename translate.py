@@ -16,9 +16,9 @@ if __name__ == '__main__':
             to_translate = sys.argv[i + 1]
         if arg == '--dict':
             dictionary = sys.argv[i + 1]
-        if arg == '--log' and sys.argv[i + 1].lower() == 'true':
+        if arg == '--log':
             log = True
-        if arg == '--write-exist' and sys.argv[i + 1].lower() == 'true':
+        if arg == '--write-exist':
             write_exist = True
     if from_translate is None or to_translate is None or dictionary is None:
         raise Exception('''not enough arguments.
@@ -27,10 +27,9 @@ if __name__ == '__main__':
     with open(from_translate, 'r') as fp:
         parsed = json.load(fp)
         parse(parsed, [], 0, keys_by_translate)
-
         wb = load_workbook(dictionary)
         wb.close()
-        sheet = wb[wb.sheetnames[0]]
+        sheet = wb[wb.sheetnames[1]]
         words = create_words_dict(sheet, offset_row=2, column_word_index=1, column_word_offset=1)
         keys_by_translate = switch_keys(keys_by_translate, words, log=log, write_exist=write_exist)
 

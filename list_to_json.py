@@ -14,9 +14,9 @@ def create_deep_dict(value, layers):
 
 def fill_arr(data):
     arr_from_dict = []
-    for key in data:
+    for i, key in enumerate(data):
         if len(data[key]) > 1:
-            for i, inner_arr in enumerate(data[key]):
+            for j, inner_arr in enumerate(data[key]):
                 arr_from_dict.append({key: inner_arr})
         else:
             arr_from_dict.append({key: data[key][0]})

@@ -1,5 +1,5 @@
-# Проверяю, что я получил строку или чиисло
 def only_str_or_int(data):
+    """Проверяю, что в данном массиве ТОЛЬКО строки или числа"""
     for item in data:
         if not isinstance(item, str) and not isinstance(item, int):
             return False
@@ -7,6 +7,11 @@ def only_str_or_int(data):
 
 
 def parse(data, keys, index, keys_by_translate):
+    """IT's magic! превращает объект из изначального JSON'a в словарь,
+    в котором значения JSON'a становятся ключами, а ключи - значениями
+
+    Если значение встречается дважды, то тогда его ключи добавляются в массив ключей
+    данного перевода"""
     for i, key in enumerate(data):
         key = key
         k = keys[:index]
@@ -19,6 +24,8 @@ def parse(data, keys, index, keys_by_translate):
         elif isinstance(data[key], list):
             k.append(key)
             if only_str_or_int(data[key]):
+                # объединяет все переводы массива по данному ключу в одно слово,
+                # разделенное символом как разделитель слов.
                 joined_translates = ";".join([str(d) for d in data[key]])
                 keys_by_translate[joined_translates] = [k]
             else:
@@ -43,6 +50,7 @@ def parse(data, keys, index, keys_by_translate):
 
 
 def write_exists(exists, dict_exists, write_exist=False):
+    """Создаст и запишет в xlsx файл все переводы, но вначале укажет те, что не найдены"""
     from openpyxl import Workbook
     index = 2
 
@@ -68,6 +76,7 @@ def write_exists(exists, dict_exists, write_exist=False):
 
 
 def switch_keys(old_dict, excel_dict, log=False, write_exist=False):
+    """Меняет местами ключи переводов"""
     copy = {}
     exists = {True: [], False: []}
     for i, key in enumerate(old_dict):
@@ -104,7 +113,7 @@ if __name__ == '__main__':
     parse(parsed, [], 0, all_keys)
     wb = load_workbook('Interface_translate_MN_29.xlsx')
     sheet = wb[wb.sheetnames[0]]
-    words = create_words_dict(sheet, offset_row=2, column_word_index=3, column_word_offset=1)
+    words = create_words_dict(sheet, offset_row=2, column=3, column_offset=1)
     new_all_keys = switch_keys(all_keys, words, log=True)
 
     print(all_keys)

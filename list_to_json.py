@@ -1,4 +1,5 @@
 def create_deep_dict(value, layers):
+    """Создает объект из массива ключей"""
     orig_data = {}
     data = orig_data
     last_layer = layers[-1]
@@ -13,6 +14,7 @@ def create_deep_dict(value, layers):
 
 
 def fill_arr(data):
+    """Перевод словаря в массив объектов"""
     arr_from_dict = []
     for i, key in enumerate(data):
         if len(data[key]) > 1:
@@ -33,6 +35,7 @@ def transform_list_to_dict(data):
 
 
 def merge(a, b, path=None):
+    """from stack overflow"""
     if path is None:
         path = []
     for key in b:
